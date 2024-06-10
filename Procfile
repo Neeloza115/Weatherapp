@@ -1,2 +1,1 @@
-web: gunicorn neelsweatherapp.wsgi:application --log-file - --log-level debug
-release: python manage.py migrate
+web: gunicorn weatherapp.wsgi:application --log-file -
