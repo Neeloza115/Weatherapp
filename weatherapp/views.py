@@ -65,7 +65,7 @@ def weather(request):
     coordinates = f"{lat},{lon}"
     start_date = timezone.now().strftime("%Y-%m-%dT%H:%M:%SZ")
     end_date = (timezone.now() + timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    url = f"https://api.meteomatics.com/{start_date}--{end_date}:PT1H/t_2m:C,precip_1h:mm,wind_speed_10m:ms,uv:idx,sunrise:sql,sunset:sql/{coordinates}/json"
+    url = f"https://api.meteomatics.com/{start_date}--{end_date}:PT1H/t_2m:C,precip_1h:mm,wind_speed_10m:ms,uv:idx/{coordinates}/json"
 
     response = requests.get(url, auth=(meteomatics_username, meteomatics_password))
 
@@ -75,8 +75,7 @@ def weather(request):
         precipitation_data = data['data'][1]['coordinates'][0]['dates']
         wind_speed_data = data['data'][2]['coordinates'][0]['dates']
         uv_index_data = data['data'][2]['coordinates'][0]['dates']
-        sunrise_data = data['data'][2]['coordinates'][0]['dates']
-        sunset_data = data['data'][2]['coordinates'][0]['dates']
+        
 
         weather_data = []
         for i in range(len(temperature_data)):
@@ -96,8 +95,6 @@ def weather(request):
                 'description': description,
                 'image': get_weather_image(description),
                 'time_zone': time_zone_str,  # Pass timezone to template
-                'sunrise': sunrise_data[i]['value'],
-                'sunset': sunrise_data[i]['value']
             })
 
         context = {

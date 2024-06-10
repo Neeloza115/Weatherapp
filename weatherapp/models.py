@@ -10,8 +10,7 @@ class Day(models.Model):
     uv_index = models.DecimalField(max_digits=5, decimal_places=2)
     weather_description = models.CharField(max_length=100)
     weather_image = models.CharField(max_length=100)
-    sunrise = models.TimeField()
-    sunset = models.TimeField()
+    
     
     def __str__(self) -> str:
-        return f"{self.date} - Temperature: {self.temperature}°C, Humidity: {self.humidity}%, Wind Speed: {self.wind_speed} m/s, Description: {self.weather_description}, {self.weather_image}, {self.sunrise}, {self.sunset}"
+        return f"{self.date} - Temperature: {self.temperature}°C, Humidity: {self.humidity}%, Wind Speed: {self.wind_speed} m/s, Description: {self.weather_description}, {self.weather_image}"
