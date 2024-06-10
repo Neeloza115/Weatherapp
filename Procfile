@@ -1,0 +1,1 @@
+web gunicorn Neelsweatherapp.wsgi:application --log-file -

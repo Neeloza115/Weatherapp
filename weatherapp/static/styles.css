@@ -1,0 +1,157 @@
+.title,
+.subtitle {
+  word-break: break-word;
+}
+
+.title:not(:last-child),
+.subtitle:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.title em,
+.title span,
+.subtitle em,
+.subtitle span {
+  font-weight: inherit;
+}
+
+.title sub,
+.subtitle sub {
+  font-size: 0.75em;
+}
+
+.title sup,
+.subtitle sup {
+  font-size: 0.75em;
+}
+
+.title .tag,
+.subtitle .tag {
+  vertical-align: middle;
+}
+
+.title {
+  color: #363636;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.125;
+}
+
+.title strong {
+  color: inherit;
+  font-weight: inherit;
+}
+
+.title + .highlight {
+  margin-top: -0.75rem;
+}
+
+.title:not(.is-spaced) + .subtitle {
+  margin-top: -1.5rem;
+}
+
+.title.is-1 {
+  font-size: 3rem;
+}
+
+.title.is-2 {
+  font-size: 2.5rem;
+}
+
+.title.is-3 {
+  font-size: 2rem;
+}
+
+.title.is-4 {
+  font-size: 1.5rem;
+}
+
+.title.is-5 {
+  font-size: 1.25rem;
+}
+
+.title.is-6 {
+  font-size: 1rem;
+}
+
+.title.is-7 {
+  font-size: 0.75rem;
+}
+
+
+.media-left,
+.media-right {
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+.media-left {
+  margin-right: 1rem;
+}
+
+.media-right {
+  margin-left: 1rem;
+}
+
+.media-content {
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
+  overflow: auto;
+  text-align: left;
+}
+
+.media {
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    text-align: left;
+  }
+  
+  .media .content:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+  
+  .media .media {
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding-top: 0.75rem;
+  }
+  
+  .media .media .content:not(:last-child),
+  .media .media .control:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+  
+  .media .media .media {
+    padding-top: 0.5rem;
+  }
+  
+  .media .media .media + .media {
+    margin-top: 0.5rem;
+  }
+  
+  .media + .media {
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  
+  .media.is-large + .media {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }

@@ -1,0 +1,826 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        .box {
+            background-color: rgb(221, 221, 221);
+            opacity: 0.9;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+                    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+            color: #4a4a4a;
+            display: block;
+            padding: 1.25rem;
+        }
+
+        .media-left,
+        .media-right {
+            -ms-flex-preferred-size: auto;
+                flex-basis: auto;
+            -webkit-box-flex: 0;
+                -ms-flex-positive: 0;
+                    flex-grow: 0;
+            -ms-flex-negative: 0;
+                flex-shrink: 0;
+        }
+
+        .media-left {
+            margin-right: 1rem;
+            background-color: #a2a2a2;
+        }
+
+        body {
+            background-color: white;
+            color: black;
+        }
+
+        body.dark-mode {
+            background-color: black;
+            color: white;
+        }
+
+        body.dark-mode .title {
+            background-color: #333;
+            color: white;
+        }
+
+        body.dark-mode .subtitle {
+            background-color: #333;
+            color: white;
+        }
+
+        body.dark-mode .dropdown {
+            position: absolute;
+            display: inline-block;
+            background-color:  #333;
+            color: white;
+        }
+
+        body.dark-mode .dropdown-content {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Additional styles for other elements in dark mode */
+        body.dark-mode .box {
+            background-color: #333;
+            color: white;
+        }
+
+        body.dark-mode .media-content {
+            background-color: #333;
+            color: white;
+        }
+
+        .darkmode {
+            appearance: button;
+            background-color: #000;
+            background-image: none;
+            border: 1px solid #000;
+            border-radius: 4px;
+            box-shadow: #fff 4px 4px 0 0,#000 4px 4px 0 1px;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-family: ITCAvantGardeStd-Bk,Arial,sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin: 0 5px 10px 0;
+            overflow: visible;
+            padding: 12px 40px;
+            text-align: center;
+            text-transform: none;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .darkmode:focus {
+            text-decoration: none;
+        }
+
+        .darkmode:hover {
+            text-decoration: none;
+        }
+
+        .darkmode:active {
+            box-shadow: rgba(0, 0, 0, .125) 0 3px 5px inset;
+            outline: 0;
+        }
+
+        .darkmode:not([disabled]):active {
+            box-shadow: #fff 2px 2px 0 0, #000 2px 2px 0 1px;
+            transform: translate(2px, 2px);
+        }
+
+        @media (min-width: 768px) {
+            .darkmode {
+                padding: 12px 50px;
+            }
+        }
+
+        body.dark-mode.darkmode {
+            appearance: button;
+            background-color: #ffffff;
+            background-image: none;
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            box-shadow: #fff 4px 4px 0 0,#000 4px 4px 0 1px;
+            box-sizing: border-box;
+            color: #000000;
+            cursor: pointer;
+            display: inline-block;
+            font-family: ITCAvantGardeStd-Bk,Arial,sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin: 0 5px 10px 0;
+            overflow: visible;
+            padding: 12px 40px;
+            text-align: center;
+            text-transform: none;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        body.dark-mode.darkmode:focus {
+            text-decoration: none;
+        }
+
+        body.dark-mode.darkmode:hover {
+            text-decoration: none;
+        }
+
+        body.dark-mode.darkmode:active {
+            box-shadow: rgba(151, 148, 148, 0.516) 0 3px 5px inset;
+            outline: 0;
+        }
+
+        body.dark-mode.darkmode:not([disabled]):active {
+            box-shadow: #fff 2px 2px 0 0, #000 2px 2px 0 1px;
+            transform: translate(2px, 2px);
+        }
+
+        @media (min-width: 768px) {
+            body.dark-mode.darkmode {
+                padding: 12px 50px;
+        }
+        }
+
+        .rainy {
+            background-color: #00416a;
+        }
+
+        .rainy .container {
+            width: 100vw; /* Full width of the viewport */
+            height: 100vh; /* Full height of the viewport */
+            position: absolute;
+            top: 25%;
+            left: 0%;
+            margin-top: -250px;
+            z-index: -1;
+        }
+
+        .rainy .rain {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            color: #002266;
+            z-index: -1;
+        }
+
+        .rainy .drop {
+            position: absolute;
+            background: linear-gradient(#000000, #ffffff);
+            opacity: 0.5; /* corrected the opacity value */
+            top: 25px;
+            z-index: -1;
+        }
+
+        /* Independent drop classes */
+        .rainy .d1 {
+            left: 97%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .94s linear .69s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d2 {
+            left: 18%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .98s linear .57s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d3 {
+            left: 38%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .66s linear .60s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d4 {
+            left: 64%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .69s linear .76s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d5 {
+            left: 95%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .75s linear .56s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d6 {
+            left: 65%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .75s linear .92s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d7 {
+            left: 19%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .92s linear .72s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d8 {
+            left: 55%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .84s linear .99s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d9 {
+            left: 35%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .79s linear .53s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d10 {
+            left: 83%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .82s linear .97s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d11 {
+            left: 8%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .75s linear .56s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d12 {
+            left: 1%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .60s linear .59s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d13 {
+            left: 13%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .5s linear .5s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d14 {
+            left: 13%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .80s linear .63s infinite;
+            z-index: -1;
+        }
+
+        .rainy .d15 {
+            left: 13%;
+            width: 0.1%;
+            height: 5%;
+            animation: fall .68s linear .75s infinite;
+            z-index: -1;
+        }
+
+        
+        @-webkit-keyframes fall {
+            to {
+                margin-top: 150px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fall {
+            to {
+                margin-top: 150px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes mover {
+            0% {
+                transform: translateY(1rem);
+            }
+
+            100% {
+                transform: translateY(2.6rem);
+            }
+        }
+
+        @keyframes mover {
+            0% {
+                transform: translateY(1rem);
+            }
+
+            100% {
+                transform: translateY(2.6rem);
+            }
+        }
+
+        .sunny {
+            background-color:#66D0FF;
+        }
+
+        .sunny .theSun {
+            opacity: 1;
+            box-shadow: 0px 0px 15px 3px yellow;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 15vh;
+            left: 70vw;
+            animation: sunpulse 2s alternate infinite;
+            border-radius: 50%;
+            background-image: radial-gradient(circle, #ffd200 95%, #f7971e);
+        }
+
+        @keyframes sunpulse {
+            from {
+                box-shadow: 0 0 100px #ff0, 0 0 100px #ff0;
+            }
+            to {
+                box-shadow: 0 0 25px #ff0, 0 0 75px #ff0;
+            }
+        }
+
+        .cloudy {
+            background-color:#66D0FF;
+        }
+        
+        @-webkit-keyframes animateCloud {
+            0% {
+                margin-left: -1000px;
+            }
+            100% {
+                margin-left: 100%;
+            }
+        }
+
+        @-moz-keyframes animateCloud {
+            0% {
+                margin-left: -1000px;
+            }
+            100% {
+                margin-left: 100%;
+            }
+        }
+
+        @keyframes animateCloud {
+            0% {
+                margin-left: -1000px;
+            }
+            100% {
+                margin-left: 100%;
+            }
+        }
+
+        /* ANIMATIONS */
+
+        .cloudy .x1 {
+            -webkit-animation: animateCloud 35s linear infinite;
+            -moz-animation: animateCloud 35s linear infinite;
+            animation: animateCloud 35s linear infinite;
+
+            -webkit-transform: scale(0.65);
+            -moz-transform: scale(0.65);
+            transform: scale(0.65);
+            z-index: -1;
+        }
+
+        .cloudy .x3 {
+            -webkit-animation: animateCloud 30s linear infinite;
+            -moz-animation: animateCloud 30s linear infinite;
+            animation: animateCloud 30s linear infinite;
+
+            -webkit-transform: scale(0.5);
+            -moz-transform: scale(0.5);
+            transform: scale(0.5);
+            z-index: -1;
+        }
+
+        .cloudy .cloud {
+            background: #fff;
+            background: -moz-linear-gradient(top,  #fff 5%, #f1f1f1 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(5%,#fff), color-stop(100%,#f1f1f1));
+            background: -webkit-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
+            background: -o-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
+            background: -ms-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
+            background: linear-gradient(top,  #fff 5%,#f1f1f1 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#f1f1f1',GradientType=0 );
+
+            -webkit-border-radius: 100px;
+            -moz-border-radius: 100px;
+            border-radius: 100px;
+
+            -webkit-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+
+            height: 120px;
+            position: relative;
+            width: 350px;
+        }
+
+        .cloudy .cloud:after, .cloudy .cloud:before {
+            background: #fff;
+            content: '';
+            position: absolute;
+            z-index: -1;
+        }
+
+        .cloudy .cloud:after {
+            -webkit-border-radius: 100px;
+            -moz-border-radius: 100px;
+            border-radius: 100px;
+
+            height: 100px;
+            left: 50px;
+            top: -50px;
+            width: 100px;
+        }
+
+        .cloudy .cloud:before {
+            -webkit-border-radius: 200px;
+            -moz-border-radius: 200px;
+            border-radius: 200px;
+
+            width: 180px;
+            height: 180px;
+            right: 50px;
+            top: -90px;
+        }
+
+        .dropbtn {
+            align-items: center;
+            background-color: #fee6e3;
+            border: 2px solid #111;
+            border-radius: 8px;
+            box-sizing: border-box;
+            color: #111;
+            cursor: pointer;
+            display: flex;
+            font-family: Inter,sans-serif;
+            font-size: 16px;
+            height: 48px;
+            justify-content: center;
+            line-height: 24px;
+            max-width: 100%;
+            padding: 0 25px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .dropbtn:after {
+            background-color: #111;
+            border-radius: 8px;
+            content: "";
+            display: block;
+            height: 48px;
+            left: 0;
+            width: 100%;
+            position: absolute;
+            top: -2px;
+            transform: translate(8px, 8px);
+            transition: transform .2s ease-out;
+            z-index: -1;
+        }
+
+        .dropbtn:hover:after {
+            transform: translate(0, 0);
+        }
+
+        .dropbtn:active {
+            background-color: #ffdeda;
+            outline: 0;
+        }
+
+        .dropbtn:hover {
+            outline: 0;
+        }
+
+        @media (min-width: 768px) {
+            dropbtn {
+            padding: 0 40px;
+            }
+        }
+
+        body.dark-mode .dropbtn {
+            align-items: center;
+            background-color: #333;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            box-sizing: border-box;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            font-family: Inter,sans-serif;
+            font-size: 16px;
+            height: 48px;
+            justify-content: center;
+            line-height: 24px;
+            max-width: 100%;
+            padding: 0 25px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body.dark-mode .dropbtn:after {
+            background-color: #ffffff;
+            border-radius: 8px;
+            content: "";
+            display: block;
+            height: 48px;
+            left: 0;
+            width: 100%;
+            position: absolute;
+            top: -2px;
+            transform: translate(8px, 8px);
+            transition: transform .2s ease-out;
+            z-index: -1;
+        }
+
+        body.dark-mode .dropbtn:hover:after {
+            transform: translate(0, 0);
+        }
+
+        body.dark-mode .dropbtn:hover {
+            outline: 0;
+        }
+
+        @media (min-width: 768px) {
+            dropbtn.dark-mode {
+            padding: 0 40px;
+            }
+        }
+
+        .dropdown {
+            position: absolute;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #858383;
+            min-width: 500px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: #ddd;}
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {display: block;}
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+        .flex-container {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+        }
+
+        .searchTerm {
+        border: 3px solid #00B4CC;
+        border-right: none;
+        padding: 5px;
+        height: 20px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #9DBFAF;
+        }
+
+        .searchTerm:focus{
+        color: #00B4CC;
+        }
+
+        .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #00B4CC;
+        background: #00B4CC;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 1.5rem;
+            }
+    
+            .subtitle {
+                font-size: 1rem;
+            }
+    
+            .media-left,
+            .media-right {
+                display: none;
+            }
+    
+            .darkmode {
+                padding: 10px 20px;
+                font-size: 12px;
+            }
+    
+            .dropbtn {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+    
+            .dropdown-content {
+                min-width: 90vw;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <button onclick="myFunction()" class="darkmode">Toggle dark mode</button>
+    <script>
+    function myFunction() {
+        var element = document.body;
+        element.classList.toggle("dark-mode");
+    }
+
+
+    function setWeatherBackground(condition) {
+        var element = document.body;
+        element.classList.remove('rainy', 'sunny', 'cloudy'); // Remove all condition classes
+        if (condition === "Rainy") {
+            element.classList.add('rainy');
+        } else if (condition === "Sunny") {
+            element.classList.add('sunny');
+        } else if (condition === "Cloudy") {
+            element.classList.add('cloudy');
+        }
+    }
+
+
+    // Call this function with the weather condition passed from the server
+    document.addEventListener('DOMContentLoaded', function() {
+        var condition = "{{ weather_data.0.description }}"; // Adjust based on your data structure
+        setWeatherBackground(condition);
+    });
+    </script>
+
+    <div class="theSun"></div>
+
+    <div class="flex-container">
+        <div class="x1">
+            <div class="cloud"></div>
+        </div>
+    </div>
+
+    <h1 style="position: relative;">Weather Information for {{ city }}</h1>
+    <form method="get">
+        <label for="city"></label>
+
+        <div class="wrap">
+            <div class="search">
+                <input type="text" id="city" name="city" required placeholder="City Name" class="searchTerm"><br>
+                <button type="submit" class="searchButton">→
+                 <i class="fa fa-search"></i>
+              </button>
+            </div>
+         </div>
+    </form>
+
+    {% if weather_data %}
+    <h2>Current Weather</h2>
+        <div class="box">
+            <article class="media">
+                <div class="media-left">
+                    <figure class="image is-30x30">
+                        <img src="http://openweathermap.org/img/wn/{{ weather_data.0.image }}.png" alt="{{ weather_data.0.description }}">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <p>
+                        <span class="title">{{ weather_data.0.datetime }}</span>
+                        <br>
+                        <span class="subtitle">{{ weather_data.0.temperature }}°C</span><br>
+                        Precipitation: {{ weather_data.0.precipitation }}mm, Wind Speed: {{ weather_data.0.wind_speed }}m/s,
+                    </p>
+                </div>
+            </article>
+        </div> <br>
+
+        <div class="dropdown">
+            <button class="dropbtn" role="button">Forecast</button>
+
+            <div class="dropdown-content">
+                {% for entry in weather_data %}
+                <ul>
+                    <li>
+                        <img src="http://openweathermap.org/img/wn/{{ entry.image }}.png" alt="{{ entry.description }}" width="20" height="20">
+                        {{ entry.datetime }} - Temp: {{ entry.temperature }}°C, Precipitation: {{ entry.precipitation }}mm, Wind Speed: {{ entry.wind_speed }}m/s, Description: {{ entry.description }}
+                    </li>
+                </ul>      
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="x3">
+            <div class="cloud"></div>
+        </div>
+
+    {% elif error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    <div class="container">
+        <div class="rain">
+            <div class="drop d1"></div>
+            <div class="drop d2"></div>
+            <div class="drop d3"></div>
+            <div class="drop d4"></div>
+            <div class="drop d5"></div>
+            <div class="drop d6"></div>
+            <div class="drop d7"></div>
+            <div class="drop d8"></div>
+            <div class="drop d9"></div>
+            <div class="drop d10"></div>
+            <div class="drop d11"></div>
+            <div class="drop d12"></div>
+            <div class="drop d13"></div>
+            <div class="drop d14"></div>
+            <div class="drop d15"></div>
+        </div>
+    </div>
+    
+</body>
+</html>
