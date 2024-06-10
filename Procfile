@@ -1,1 +1,1 @@
-web gunicorn Neelsweatherapp.wsgi:application --log-file -
+web: gunicorn Neelsweatherapp.wsgi:application --log-file -
